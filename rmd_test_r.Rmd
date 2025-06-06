@@ -1,0 +1,76 @@
+---
+title: "rmd_test"
+author: "surecalois"
+date: '2025-05-16'
+output: html_document
+params:
+  well: "string"
+  hello: "whatever"
+  outfile: "just to show you the filename -> "
+knit: (function(input,...){source("rmd_test.r",local = T)})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+params
+```
+
+# how it is done
+
+## the yaml header in Rmd
+
+```{yaml eval=F}
+output: html_document
+params:
+  well: "string"
+  hello: "whatever"
+  outfile: "just to show you the filename -> "
+knit: (function(input,...){source("rmd_test.r",local = T)})
+```
+
+## the rscript in rmd_test.r to _source_
+```{r cache=FALSE,include=F}
+knitr::read_chunk('rmd_test.r')
+```
+
+```{r rmd_test,eval=F}
+```
+
+# here pasted the script again
+
+```{r eval=F}
+# ---- rmd_test ----
+
+library(rmarkdown)
+
+print("runing the rmd_test.r")
+#input = "rmd_test_r.Rmd"
+
+
+wow = yaml_front_matter(input)
+print("============this is wow==============")
+print(wow)
+print("============wow is done==============")
+
+wow$params$outfile = paste0(wow$params$outfile,basename(input),"_",wow$params$well,'.html')
+render(
+  input,
+  output_file = paste0(basename(input),"_",wow$params$well,'.html'),
+  params = wow$params
+)
+
+print("the rmd_test.r is finished")
+
+
+
+```
+
+
+
+
+
+
+
